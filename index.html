@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#F3F5FA">
+  <meta name="description" content="KLIKRA Projects Marketplace — temukan proyek, tools, template, dan pengalaman belajar digital.">
+  <title>KLIKRA Projects Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script src="assets/js/app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="KLIKRA Marketplace beranda">
+      <span class="brand-mark">K</span><span>KLIKRA<span class="brand-light"> PROJECTS</span></span>
+    </a>
+    <nav class="desktop-nav" aria-label="Navigasi utama">
+      <a href="#explore">Jelajahi</a><a href="#categories">Kategori</a><a href="#about">Tentang</a>
+    </nav>
+    <a class="header-cta" href="#explore">Mulai Jelajah <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="pulse"></span> RUANG KARYA DIGITAL KLIKRA</span>
+        <h1>Temukan ide.<br><span>Jelajahi kemungkinan.</span></h1>
+        <p>Satu tempat untuk menemukan proyek digital, tools, template, dan pengalaman belajar yang dibuat untuk membantu ide bertumbuh.</p>
+        <div class="hero-actions"><a class="button button-primary" href="#explore">Jelajahi proyek <span>→</span></a><a class="text-link" href="#about">Kenali Marketplace <span>↗</span></a></div>
+        <div class="hero-note"><span class="note-dot"></span> Explore • Learn • Create</div>
+      </div>
+      <div class="hero-art" aria-label="Ilustrasi abstrak perjalanan ide">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="art-card card-back"><span class="mini-label">IDE → KARYA</span><div class="back-lines"></div></div>
+        <div class="art-card card-front"><span class="art-symbol">✳</span><strong>Make it<br>meaningful.</strong><span class="art-caption">A little idea can grow.</span></div>
+        <span class="floating-tag tag-top">✦ Discover</span><span class="floating-tag tag-bottom">↗ Create</span>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="Nilai Marketplace">
+      <div><strong>01</strong><span>Discover</span></div><div><strong>02</strong><span>Explore</span></div><div><strong>03</strong><span>Learn</span></div><div><strong>04</strong><span>Create</span></div>
+    </section>
+
+    <section class="section" id="explore">
+      <div class="section-heading">
+        <div><span class="eyebrow">PILIHAN RUANG JELAJAH</span><h2>Jelajahi proyek</h2><p>Temukan sesuatu yang bisa menggerakkan ide berikutnya.</p></div>
+        <span class="result-count" id="result-count">4 proyek</span>
+      </div>
+      <div class="toolbar">
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Cari proyek, tools, atau template…" aria-label="Cari proyek"></label>
+        <div class="filters" role="group" aria-label="Filter kategori">
+          <button class="filter active" data-filter="Semua">Semua</button>
+          <button class="filter" data-filter="Aplikasi">Aplikasi</button>
+          <button class="filter" data-filter="Pembelajaran">Pembelajaran</button>
+          <button class="filter" data-filter="Eksperimen">Eksperimen</button>
+        </div>
+      </div>
+      <div class="project-grid" id="project-grid">
+        <article class="project-card"><div class="project-visual visual-green"><span class="visual-icon">⌁</span><span class="visual-index">PROJECT 01</span></div><div class="project-info"><div class="card-meta"><span>Aplikasi</span><span>Konsep</span></div><h3>SARPRAS Smart Scan</h3><p>Konsep layanan digital untuk peminjaman barang dan pengelolaan inventaris sekolah.</p><button class="detail-link" data-project="sarpras">Lihat ringkasan <span>→</span></button></div></article>
+        <article class="project-card"><div class="project-visual visual-olive"><span class="visual-icon">✳</span><span class="visual-index">PROJECT 02</span></div><div class="project-info"><div class="card-meta"><span>Pembelajaran</span><span>Konsep</span></div><h3>AI Tutor</h3><p>Gagasan pendamping belajar yang membantu manusia berpikir, memahami, dan berkembang.</p><button class="detail-link" data-project="aitutor">Lihat ringkasan <span>→</span></button></div></article>
+        <article class="project-card"><div class="project-visual visual-dark"><span class="visual-icon">◈</span><span class="visual-index">PROJECT 03</span></div><div class="project-info"><div class="card-meta"><span>Eksperimen</span><span>Eksplorasi</span></div><h3>Browser Projects</h3><p>Ruang eksperimen untuk menguji pengalaman aplikasi dan proyek berbasis browser.</p><button class="detail-link" data-project="browser">Lihat ringkasan <span>→</span></button></div></article>
+        <article class="project-card"><div class="project-visual visual-blue"><span class="visual-icon">⌘</span><span class="visual-index">PROJECT 04</span></div><div class="project-info"><div class="card-meta"><span>Aplikasi</span><span>Konsep</span></div><h3>KLIKRA Engine</h3><p>Fondasi sederhana untuk membangun dan mengembangkan pengalaman digital KLIKRA.</p><button class="detail-link" data-project="engine">Lihat ringkasan <span>→</span></button></div></article>
+      </div>
+      <div class="empty-state" id="empty-state" hidden><strong>Belum ada yang cocok.</strong><span>Coba kata kunci atau kategori lain.</span></div>
+    </section>
+
+    <section class="category-band" id="categories"><div><span class="eyebrow">JALUR PENJELAJAHAN</span><h2>Mulai dari rasa ingin tahu.</h2></div><div class="category-pills"><span>✳ Digital Tools</span><span>▧ Templates</span><span>⌘ Learning</span><span>◈ Experiments</span></div></section>
+    <section class="about" id="about"><span class="eyebrow">TENTANG KLIKRA</span><h2>Ide baik layak mendapat ruang untuk tumbuh.</h2><p>KLIKRA Projects Marketplace dirancang sebagai pintu masuk untuk mengenal karya, gagasan, dan pengalaman digital dalam ekosistem KLIKRA.</p></section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark">K</span><span>KLIKRA<span class="brand-light"> PROJECTS</span></span></a><span>Explore with purpose. Create with meaning.</span><span>© <span id="year"></span> KLIKRA</span></footer>
+
+  <dialog id="project-dialog" class="project-dialog"><button class="dialog-close" id="dialog-close" aria-label="Tutup">×</button><span class="eyebrow" id="dialog-category">PROJECT</span><h2 id="dialog-title">Nama proyek</h2><p id="dialog-description"></p><span class="dialog-status" id="dialog-status"></span></dialog>
+</body>
+</html>
