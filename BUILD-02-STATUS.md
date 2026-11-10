@@ -22,7 +22,7 @@ Build 02 now includes a Neon-backed marketplace application, persistent tenant s
 | Role and membership model | PARTIAL | Buyer/seller capabilities, owner/admin/moderator roles; dual-role setting enforced in seller approval; E2E role tests pending |
 | Seller Center | PARTIAL — DB WORKFLOW TEST PASS | Seller application, admin approval, active store creation, buyer+seller capability tested with synthetic identities; browser E2E pending |
 | Product media | IMPLEMENTED — NOT E2E TESTED | `marketplace-media` public-read bucket and `wlmuploads` Neon Function deployment #3 completed; client upload flow wired, live upload test pending |
-| Shopping | PARTIAL | Public catalogue, search, offers; full multi-product cart not implemented |
+| Shopping | PARTIAL | Search/category filtering, browser-side multi-product cart, batch offer submission; consolidated multi-item checkout not implemented |
 | Negotiation | PARTIAL — DB WORKFLOW TEST PASS | Offer, counter, accept, event history, rejection of own-offer acceptance tested in transaction; browser E2E pending |
 | Orders | PARTIAL | Accepted-offer order creation, stock decrement, idempotency key, legal status transitions; one offer creates one order; shipping/refunds/payment absent |
 | Multi-tenant isolation | PARTIAL — DB POLICY TEST PASS | Synthetic two-identity transaction verified cross-tenant private reads and product mutation are denied; real browser sessions still pending |
