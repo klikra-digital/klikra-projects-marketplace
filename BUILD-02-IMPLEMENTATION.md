@@ -194,3 +194,11 @@ Tests were run on `wlm-build02-dev` using synthetic JWT claim contexts and tempo
 - The transaction was rolled back after assertions.
 
 **Interpretation:** These are meaningful PostgreSQL/RLS/RPC tests, but they do not replace a real browser session, actual Neon Auth sign-up/login, or live upload test.
+
+
+### Shopping cart scope
+- Added a browser-side cart with multiple products, quantity and per-unit offer price controls, removal, and indicative subtotal.
+- Cart can submit multiple offers in sequence; each product gets its own negotiation thread so offer history remains explicit.
+- Cart data is local to the current browser/device. It is not a server-synced cart.
+- Orders remain per accepted offer; consolidated multi-item checkout is not implemented.
+- Catalogue supports category assignment, category filtering, text search, and product media display.
