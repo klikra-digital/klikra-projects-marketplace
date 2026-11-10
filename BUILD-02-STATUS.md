@@ -47,7 +47,7 @@ Build 02 has progressed beyond the original Studio-only prototype. It now includ
 ## Latest security hardening
 
 - Seller store creation now requires an approved seller capability; ordinary marketplace membership alone is insufficient.
-- Offers now record `created_by_user_id`; only the other party may accept, reject, or counter the latest offer. Only the offer creator may withdraw it.
+- Offers now record `created_by_user_id` and negotiation events identify the latest actor; the database RPC rejects a response from the same party who made the latest offer. The UI only presents response controls to the other party.
 - Development database verification: 13/13 public tables have RLS enabled; 25 policies are present; the seller-store insert policy and offer creator column were inspected after migration.
 - JavaScript module syntax was checked with a parser-equivalent compilation check. This is not browser execution.
 
