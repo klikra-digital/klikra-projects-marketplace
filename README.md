@@ -38,3 +38,26 @@ GitHub Pages can serve this repository from the `main` branch and the `/` (root)
 - Keep future changes incremental and verify each build before replacing established work.
 
 **Build status:** MVP front-end scaffold committed.
+
+## Build 02 — White-Label Marketplace development app
+
+Build 02 is developed separately from the Build 01 baseline on branch `build-02-marketplace-studio`.
+
+- Marketplace application: `marketplace.html`
+- Marketplace Studio visual prototype: `studio.html`
+- Implementation record: `BUILD-02-IMPLEMENTATION.md`
+- Current status and remaining gates: `BUILD-02-STATUS.md`
+
+### Development preview
+
+Serve the repository locally (for example, `python -m http.server 5173`) and open:
+
+- `http://localhost:5173/marketplace.html`
+
+The app uses the dedicated Neon development branch and Neon Auth/Data API. Do not copy database connection strings or privileged credentials into frontend code. The browser-facing Neon service endpoints are not database passwords.
+
+### Important
+
+Build 02 is not production-ready. Authenticated browser E2E, cross-tenant adversarial testing, secure image storage, Studio persistence, full multi-item cart, and production deployment remain outstanding. Payments are intentionally disabled.
+
+Do not merge or deploy Build 02 to production based only on the presence of frontend pages or database tables.
