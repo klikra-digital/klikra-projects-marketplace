@@ -72,3 +72,14 @@ Build 02 now includes a Neon-backed marketplace application, persistent tenant s
 10. Merge/deploy only after release gates pass.
 
 See `BUILD-02-IMPLEMENTATION.md` for architecture, configuration, verification evidence, and known limitations.
+
+
+## Checkpoint keamanan & kontrak API — 11 November 2026
+
+- Development branch Neon `wlm-build02-dev`: 13 tabel dan 24 kebijakan RLS terverifikasi melalui katalog PostgreSQL.
+- Hak langsung `INSERT/UPDATE` pada `offers`, `UPDATE` pada `seller_applications`, dan `UPDATE` pada `product_media` dicabut dari role `authenticated`. Penawaran wajib melalui RPC; akses UPDATE yang tidak memiliki policy tidak lagi diberikan.
+- Ditemukan frontend memanggil RPC `save_marketplace_categories` yang tidak ada. Diperbaiki pada commit `0a2f413fe16a0dafa31adad556ab6b6b2683cdcd` dengan upsert ke tabel `categories` memakai unique key tenant_id+slug dan RLS admin.
+- Tombol hapus produk sebelumnya memanggil DELETE, sementara privilege DELETE tidak tersedia. Diubah menjadi arsip (PATCH status=archived), agar riwayat transaksi tidak terhapus.
+- Pemeriksaan sintaks JavaScript module setelah perubahan: PASS (parse/compile check, bukan browser E2E).
+- Belum diuji: dua identitas Neon Auth nyata, alur login browser, upload storage endpoint, isolasi dua tenant dengan JWT berbeda, serta transaksi end-to-end.
+- Status produk tetap PARTIAL / NOT READY FOR LAUNCH. Database utama tidak diubah; tidak ada deployment produksi.
