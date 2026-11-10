@@ -83,3 +83,8 @@ See `BUILD-02-IMPLEMENTATION.md` for architecture, configuration, verification e
 - Pemeriksaan sintaks JavaScript module setelah perubahan: PASS (parse/compile check, bukan browser E2E).
 - Belum diuji: dua identitas Neon Auth nyata, alur login browser, upload storage endpoint, isolasi dua tenant dengan JWT berbeda, serta transaksi end-to-end.
 - Status produk tetap PARTIAL / NOT READY FOR LAUNCH. Database utama tidak diubah; tidak ada deployment produksi.
+
+
+### Klarifikasi pemeriksaan ulang RPC
+
+Pemeriksaan katalog PostgreSQL berikutnya menemukan bahwa `record_product_media` dan `save_marketplace_categories` terdaftar pada development branch. Temuan awal bahwa RPC kategori tidak ada tidak konsisten dengan pemeriksaan ulang; kemungkinan perubahan database berlangsung di antara pembacaan katalog. Frontend kini menggunakan upsert langsung untuk kategori, sehingga jalur simpan kategori tidak bergantung pada RPC tersebut. RPC `record_product_media` tetap dipakai oleh fungsi upload. Keberhasilan upload end-to-end dan konfigurasi credential storage masih belum dibuktikan.
