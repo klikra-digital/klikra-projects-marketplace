@@ -29,7 +29,7 @@ The development database branch is isolated from the primary database branch. No
 - User profiles now map to Neon Auth identities using `auth_user_id`.
 - Membership capabilities support buyer and seller simultaneously, while preserving owner/admin/moderator roles.
 - PostgreSQL RLS enabled on all 11 original public tables plus 2 added tables.
-- 24 RLS policies were verified in `pg_policies`.
+- 25 RLS policies were verified in `pg_policies`.
 - Public/anonymous read policies are limited to active marketplace content.
 - RPC functions have explicit authenticated-only execution grants; anonymous execution was verified false.
 
@@ -97,6 +97,12 @@ For a local static preview, serve the repository with a local web server on `htt
 5. There is no multi-product cart, shipping calculation, refund workflow, seller payout, or online payment integration.
 6. The database primary branch has not received these development changes. Promote only after review, tests, and an explicit migration decision.
 7. `studio.html` remains a browser-local prototype; the new `marketplace.html` is the connected development application. The Studio form itself still needs integration with the persistent settings API.
+
+## Additional security hardening
+
+- Store insertion policy now requires seller capability (owner/admin/seller or explicit seller capability), preventing ordinary buyer members from creating seller stores directly.
+- Offers persist `created_by_user_id`; the latest offer can only be accepted/rejected/countered by the other participant, and only its creator can withdraw it.
+- These changes were applied and inspected on the isolated development branch. No real authenticated user scenario was run, so runtime authorization remains unverified.
 
 ## Production gate
 
