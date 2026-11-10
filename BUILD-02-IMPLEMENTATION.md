@@ -202,3 +202,10 @@ Tests were run on `wlm-build02-dev` using synthetic JWT claim contexts and tempo
 - Cart data is local to the current browser/device. It is not a server-synced cart.
 - Orders remain per accepted offer; consolidated multi-item checkout is not implemented.
 - Catalogue supports category assignment, category filtering, text search, and product media display.
+
+
+## Security/API checkpoint (2026-11-11)
+
+The development database was re-inspected against PostgreSQL catalogs. It contains 13 public tables and 24 RLS policies. Direct authenticated INSERT/UPDATE privileges on offers and UPDATE on seller_applications/product_media were revoked where workflow writes must be mediated or no matching UPDATE policy exists. Frontend category persistence was corrected to use the existing categories table with tenant_id+slug conflict handling; the nonexistent save_marketplace_categories RPC call was removed. Product removal was changed to archival via status=archived because authenticated DELETE is not granted and preserving transaction history is safer.
+
+JavaScript module syntax/compilation passed after the frontend patch. This is not browser runtime validation. Authenticated multi-user tenant isolation, storage endpoint, image metadata persistence, cross-site auth, and complete order/cart E2E remain unverified. Do not promote the development schema or deploy production based on this checkpoint.
