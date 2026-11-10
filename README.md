@@ -59,6 +59,6 @@ The app uses the dedicated Neon development branch and Neon Auth/Data API. Produ
 
 ### Important
 
-Build 02 is not production-ready. Authenticated browser E2E, cross-tenant adversarial testing, upload E2E, mobile/desktop QA, and production deployment remain outstanding. The old `studio.html` page is only a local visual preview; persistent settings are managed in the main app after login. A full multi-item cart, shipping/refunds, and online payments are not implemented. Payments are intentionally disabled.
+Build 02 is not production-ready. Authenticated browser E2E, cross-tenant adversarial testing, upload E2E, mobile/desktop QA, and production deployment remain outstanding. The old `studio.html` page is only a local visual preview; persistent settings are managed in the main app after login. A browser-side multi-product cart can batch separate offers per product; consolidated multi-item checkout, shipping/refunds, and online payments are not implemented. Payments are intentionally disabled.
 
 Do not merge or deploy Build 02 to production based only on the presence of frontend pages or database tables.
