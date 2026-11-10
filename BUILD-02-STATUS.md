@@ -24,7 +24,7 @@ Build 02 has progressed beyond the original Studio-only prototype. It now includ
 | Shopping | PARTIAL | Public product catalogue and product creation; multi-item cart not implemented |
 | Negotiation | IMPLEMENTED — NOT E2E TESTED | Offer, counter, accept, reject, append-only events |
 | Orders | PARTIAL | Accepted-offer order creation, stock decrement, status RPC; shipping/refund/payment absent |
-| Multi-tenant isolation | PARTIAL | 13 tables RLS-enabled, 24 policies; adversarial cross-tenant test pending |
+| Multi-tenant isolation | PARTIAL | 13 tables RLS-enabled, 25 policies; adversarial cross-tenant test pending |
 | Product media | NOT IMPLEMENTED | Metadata table only; no object storage or upload |
 | Security | PARTIAL | RLS and function grants audited; no authenticated penetration test |
 | Mobile & desktop | PARTIAL | Responsive layout implemented; real browser/device QA pending |
@@ -43,6 +43,13 @@ Build 02 has progressed beyond the original Studio-only prototype. It now includ
 - Neon Auth: provisioned
 - Neon Data API: active, JWT verification through Neon Auth
 - Primary database branch: unchanged by Build 02 development changes
+
+## Latest security hardening
+
+- Seller store creation now requires an approved seller capability; ordinary marketplace membership alone is insufficient.
+- Offers now record `created_by_user_id`; only the other party may accept, reject, or counter the latest offer. Only the offer creator may withdraw it.
+- Development database verification: 13/13 public tables have RLS enabled; 25 policies are present; the seller-store insert policy and offer creator column were inspected after migration.
+- JavaScript module syntax was checked with a parser-equivalent compilation check. This is not browser execution.
 
 ## Next engineering gates
 
