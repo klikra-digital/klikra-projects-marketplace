@@ -1,53 +1,59 @@
-# KLIKRA White-Label Marketplace Engine — Build 02
+# KLIKRA White-Label Marketplace Engine — Build 02 Status
 
 **Project token:** `KLIKRA-WLM-001`  
 **Continuity token:** `KLIKRA-WLM-CONTINUITY-001`  
-**Branch:** `build-02-marketplace-studio`
+**Development branch:** `build-02-marketplace-studio`  
+**Pull request:** [PR #1](https://github.com/klikra-digital/klikra-projects-marketplace/pull/1)
 
-## What exists
+## Current state
 
-- Build 01 remains unchanged on `main`.
-- Build 02 adds `studio.html`, an interactive Marketplace Studio front-end prototype.
-- The Studio prototype supports editing marketplace name and description, uploading a local logo preview, selecting primary/accent colors, choosing a visual template, enabling/disabling seller registration, choosing seller approval mode, toggling dual buyer/seller role, and selecting marketplace categories.
-- Configuration can be saved in the current browser's localStorage.
-- A seller registration preview dialog demonstrates the intended entry point.
+Build 02 has progressed beyond the original Studio-only prototype. It now includes a connected development application at `marketplace.html`, backed by a dedicated Neon development branch with Neon Auth, Neon Data API, PostgreSQL RLS, and marketplace workflow RPCs.
 
-## Important prototype boundaries
+**This is a development implementation, not a production launch.** Build 01 on `main` remains unchanged. The new database objects and auth integration are on Neon branch `wlm-build02-dev`, not on the primary database branch.
 
-This is a front-end prototype only. localStorage is local to one browser and is not a server database. It does not provide accounts, authentication, authorization, persistent shared tenant data, secure logo storage, real seller applications, product publishing, cart, orders, chat, negotiation, payments, or multi-tenant isolation. The seller form is a preview and does not submit or store applications.
+## Component status
 
-Do not use this prototype for real customer or transaction data.
-
-## Phase status
-
-| Phase | Status | Evidence / next requirement |
+| Component | Status | Evidence / limitation |
 |---|---|---|
-| 1. Repository audit | PASS | Existing Build 01 files reviewed; baseline retained. |
-| 2. Product architecture | PARTIAL | White-label model and tenant boundaries documented at concept level; detailed schema and threat model still required. |
-| 3. Marketplace Studio | PARTIAL | Interactive browser-only configuration prototype added. |
-| 4. Marketplace frontend | NOT IMPLEMENTED | Public bazaar catalogue, product details, search, seller storefronts. |
-| 5. Seller registration | PREVIEW ONLY | UI entry point exists; server-side application workflow not implemented. |
-| 6. Shopping & negotiation | NOT IMPLEMENTED | Requires authenticated users and transactional backend. |
-| 7. Backend & database | BLOCKED | No backend project, credentials, schema, or auth provider configured in this repository. |
-| 8. Multi-marketplace system | NOT IMPLEMENTED | Requires tenant-aware schema, authorization policies, and isolation tests. |
-| 9. Security & quality audit | PARTIAL | Front-end source review only; no automated browser, accessibility, or penetration tests run. |
-| 10. Deployment & verification | NOT DEPLOYED | Build 02 branch is not the GitHub Pages production branch. |
+| Repository baseline | PASS | Build 01 retained; Build 02 isolated in its branch |
+| Marketplace Studio | PARTIAL | `studio.html` remains localStorage prototype; persistent Studio integration pending |
+| Marketplace creation | IMPLEMENTED — NOT E2E TESTED | Neon RPC `create_marketplace`; authenticated browser test pending |
+| Authentication | IMPLEMENTED — NOT E2E TESTED | Neon Auth provisioned; no real test account/session used |
+| Role and membership model | PARTIAL | Buyer/seller capabilities and owner/admin/moderator roles; end-to-end role tests pending |
+| Seller Center | PARTIAL | Seller application, approval RPC, store/product workflow present; authenticated E2E pending |
+| Shopping | PARTIAL | Public product catalogue and product creation; multi-item cart not implemented |
+| Negotiation | IMPLEMENTED — NOT E2E TESTED | Offer, counter, accept, reject, append-only events |
+| Orders | PARTIAL | Accepted-offer order creation, stock decrement, status RPC; shipping/refund/payment absent |
+| Multi-tenant isolation | PARTIAL | 13 tables RLS-enabled, 24 policies; adversarial cross-tenant test pending |
+| Product media | NOT IMPLEMENTED | Metadata table only; no object storage or upload |
+| Security | PARTIAL | RLS and function grants audited; no authenticated penetration test |
+| Mobile & desktop | PARTIAL | Responsive layout implemented; real browser/device QA pending |
+| Deployment | NOT DEPLOYED | PR #1 open; Build 02 not published to production |
 
-## How to preview
+## Database development branch
 
-When the branch is published or checked out locally, open `studio.html`. The existing Build 01 homepage remains `index.html`.
+- Neon project: `KLIKRA-WLM-ENGINE`
+- Database: `klikra_marketplace`
+- Branch: `wlm-build02-dev`
+- Original public tables: 11
+- Added public tables: `product_media`, `negotiation_events`
+- RLS-enabled public tables: 13
+- RLS policies: 24
+- Core workflow RPCs: 8
+- Neon Auth: provisioned
+- Neon Data API: active, JWT verification through Neon Auth
+- Primary database branch: unchanged by Build 02 development changes
 
-## Production requirements before launch
+## Next engineering gates
 
-1. Choose and provision a backend/authentication provider.
-2. Design tenant, member, seller application, store, product, offer, negotiation, order, and audit-event tables.
-3. Enforce tenant isolation server-side (never trust a client-supplied tenant ID).
-4. Define roles: platform operator, tenant owner/admin/moderator, seller, buyer.
-5. Store uploaded logos and product media in managed object storage with file validation.
-6. Implement server-side seller approval and state transitions.
-7. Implement negotiation with immutable offer history and explicit accept/reject/counter-offer states.
-8. Add order confirmation and fulfilment states. Keep online payments disabled until a payment provider is integrated and tested.
-9. Add automated tests for authorization and cross-tenant access denial.
-10. Perform responsive, accessibility, and production deployment verification.
+1. Run authenticated browser E2E with at least two users across two tenants.
+2. Verify that a user from tenant A cannot read or mutate tenant B's private data.
+3. Validate all RPC transitions and stock/order concurrency.
+4. Integrate Marketplace Studio with persistent tenant settings.
+5. Provision secure product media storage and upload validation.
+6. Resolve same-site authentication/cookie behavior for the final domain.
+7. Complete accessibility, responsive, and performance checks.
+8. Review and promote database changes only after tests pass.
+9. Prepare deployment and update PR #1 with verified evidence.
 
-**Truthful status:** Build 02 is a useful interactive Studio prototype, not yet a production-ready white-label marketplace engine.
+See [BUILD-02-IMPLEMENTATION.md](BUILD-02-IMPLEMENTATION.md) for architecture, configuration, test evidence, and limitations.
