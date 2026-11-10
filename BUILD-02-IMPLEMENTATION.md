@@ -107,3 +107,59 @@ For a local static preview, serve the repository with a local web server on `htt
 ## Production gate
 
 Do not publish this as a production marketplace until authenticated browser tests, cross-tenant security tests, storage, verified email, and same-site auth behavior have been validated. Keep payment disabled until a provider and complete payment lifecycle are integrated and tested.
+
+
+## Latest completion pass — media, Studio persistence, and workflow hardening
+
+### Marketplace application
+- The authenticated application now contains persistent marketplace settings for name, description, brand colors, template, seller registration, approval mode, and dual buyer/seller behavior.
+- Marketplace logo and banner upload controls call the authenticated Neon Function.
+- Tenant categories can be saved through the `save_marketplace_categories` RPC.
+- Product creation accepts an image; public catalogue reads product media metadata.
+- Seller Center includes owner-scoped product listing, edit, and delete controls.
+- Marketplace identity displays the saved logo and banner.
+- `studio.html` is explicitly labeled as a visual preview; the persistent editor is the management panel in `marketplace.html`.
+
+### Neon Object Storage and upload function
+- Bucket: `marketplace-media` (`public_read`) on `wlm-build02-dev`.
+- Neon Function slug: `wlmuploads`.
+- Runtime: Node.js 24.
+- Active deployment: #3, status `completed`.
+- Source is tracked at `functions/wlmuploads/index.mjs`.
+- Upload endpoint accepts JPEG, PNG, and WebP up to 5 MB.
+- Browser sends the image to the authenticated Function; storage credentials remain inside Neon Function environment.
+- Function checks the caller's JWT-backed profile and verifies product ownership or marketplace admin membership before writing.
+- Product media metadata is written through the restricted `record_product_media` RPC; marketplace logo/banner URLs are updated through tenant RLS.
+- Earlier Function deployment #2 failed because external npm packages were not bundled. It was replaced by a dependency-free Node.js implementation and deployment #3 completed.
+- A real authenticated upload round trip has not yet been executed; do not claim upload E2E PASS.
+
+### Database and security hardening
+- Direct authenticated INSERT/UPDATE/DELETE on `offers` revoked; offer mutations must use protected RPCs.
+- Direct authenticated INSERT/UPDATE/DELETE on `seller_applications` revoked; applications must use the protected submission/review RPCs.
+- Direct authenticated INSERT on `stores` revoked; stores are created on seller approval.
+- Direct authenticated INSERT/UPDATE/DELETE on `product_media` revoked; metadata is recorded through the upload Function and RPC.
+- Authenticated DELETE on `products` granted with an owner/admin RLS delete policy.
+- Offer response RPC now checks the last negotiation event actor so the same party cannot respond to its own latest offer.
+- Offer creation and counter-offer creation set `created_by_user_id` explicitly.
+- Order creation is idempotent per accepted offer, uses an advisory transaction lock, and stores the offer ID.
+- Added tenant-scoped foreign key from orders to offers.
+- Seller approval respects `allow_dual_role`: when disabled, membership becomes seller-only; when enabled, buyer and seller capabilities coexist.
+- Verified current development state: 13 RLS-enabled public tables and 25 RLS policies.
+
+## Current evidence and remaining tests
+
+| Check | Result |
+|---|---|
+| Development branch ready | PASS |
+| Function deployment #3 | PASS — deployment completed |
+| JS module syntax after latest frontend edits | PASS |
+| RLS tables | PASS — 13 |
+| RLS policies | PASS — 25 |
+| Direct write restrictions for offers, seller applications, stores, and product media | PASS — privilege checks |
+| Real authenticated signup/login browser flow | NOT TESTED |
+| Real product image upload round trip | NOT TESTED |
+| Two-user/two-tenant adversarial isolation | NOT TESTED |
+| Full mobile/desktop browser QA | NOT TESTED |
+| Production deployment | NOT DEPLOYED |
+
+The development database branch remains isolated. No development schema changes have been promoted to the primary Neon branch. Payment remains disabled.
