@@ -163,3 +163,34 @@ Do not publish this as a production marketplace until authenticated browser test
 | Production deployment | NOT DEPLOYED |
 
 The development database branch remains isolated. No development schema changes have been promoted to the primary Neon branch. Payment remains disabled.
+
+
+## Database-level workflow and tenant-isolation tests (rolled back)
+
+Tests were run on `wlm-build02-dev` using synthetic JWT claim contexts and temporary fixture rows inside transactions. Every test transaction ended with `ROLLBACK`; no test users, tenants, stores, products, offers, or orders were retained.
+
+### Tenant isolation
+- Anonymous role saw active marketplace listings and active products, but not draft products or paused stores.
+- Synthetic authenticated user A had membership in tenant A but not tenant B.
+- User A saw zero tenant B paused stores, draft products, offers, and memberships.
+- User A's attempted update of tenant B's draft product affected zero rows.
+- `is_marketplace_member(A)` returned true; `is_marketplace_member(B)` returned false.
+
+### Seller and category workflow
+- Synthetic buyer submitted a seller application.
+- Synthetic tenant owner approved the application.
+- Active store was created for the applicant.
+- With dual-role enabled, membership capabilities became `buyer,seller`.
+- Category synchronization created categories and deactivated a category removed from the submitted list.
+
+### Negotiation and order workflow
+- Initial buyer offer was created with creator identity and event history.
+- The same buyer attempting to accept their own latest offer was rejected.
+- Seller counter-offer succeeded.
+- Buyer acceptance succeeded.
+- Order creation succeeded and was idempotent for the accepted offer.
+- Seller transitions `confirmed → processing → ready` and buyer transition `completed` succeeded.
+- Stock decreased once from 5 to 3 for quantity 2.
+- The transaction was rolled back after assertions.
+
+**Interpretation:** These are meaningful PostgreSQL/RLS/RPC tests, but they do not replace a real browser session, actual Neon Auth sign-up/login, or live upload test.
