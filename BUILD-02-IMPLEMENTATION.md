@@ -227,3 +227,8 @@ This record supersedes older statements where they conflict.
 
 ### Outstanding release gates
 Real Neon Auth browser sessions, two-user/two-tenant browser adversarial tests, live storage upload, complete browser seller/cart/negotiation/order flow, persistent settings and media verification, mobile/desktop/accessibility QA, production email/domain/cookie/monitoring review. No primary migration, PR merge, or production deployment until those gates pass and required authorization is obtained.
+
+
+## Storage configuration repair — 2026-11-11
+
+Neon Object Storage was confirmed enabled on `wlm-build02-dev`, with the `marketplace-media` bucket configured as `public_read` and initially empty. Inspection found that the prior Function deployment had only `NEON_STORAGE_BUCKET`, while the source also requires S3 endpoint and signing credentials. A branch-scoped Neon credential limited to `storage:write` was issued and injected directly into the Function environment (not into Git or browser code). Function `wlmuploads` was redeployed as deployment #4 on Node.js 24 with the required environment keys. This fixes the identified missing configuration, but actual HTTP upload and readback remain untested; no object was uploaded. Public-read bucket content must contain only intended public images. Production requires a separate branch-scoped credential and separate bucket configuration.
