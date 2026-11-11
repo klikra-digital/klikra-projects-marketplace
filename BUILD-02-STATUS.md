@@ -126,3 +126,13 @@ This section supersedes older checkpoint statements above where they conflict.
 8. Explicit approval before primary DB migration, PR merge, or production deployment.
 
 **Release decision: NOT READY FOR CONTROLLED LAUNCH.** Keep PR #1 draft, development branch isolated, and payments disabled until release gates are evidenced.
+
+
+### Upload storage configuration repair — 11 November 2026
+
+- Confirmed Neon Object Storage is enabled on `wlm-build02-dev`; bucket `marketplace-media` exists with `public_read` access. The bucket currently contains zero objects.
+- Found the previous `wlmuploads` deployment #3 did not have the S3 environment variables required by its source code. Its health endpoint would report storage unavailable and actual uploads could not work.
+- Issued a dedicated Neon scoped credential named `wlmuploads-function-storage-write` with only `storage:write` scope. Secret values were passed directly into Neon Function environment configuration and were not written to repository files or frontend.
+- Redeployed `wlmuploads` as deployment #4 (Node.js 24, completed) with `AWS_ENDPOINT_URL_S3`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, and `NEON_STORAGE_BUCKET` configured.
+- Storage credential is branch-scoped to `wlm-build02-dev`; do not reuse it for production. The bucket is public-read by design for public catalogue images; do not place private documents in it.
+- Real upload request/response and object round-trip remain unverified because this session has no browser or HTTP invocation tool. Bucket listing confirms no test object was uploaded.
