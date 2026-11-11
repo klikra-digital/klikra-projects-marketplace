@@ -209,3 +209,21 @@ Tests were run on `wlm-build02-dev` using synthetic JWT claim contexts and tempo
 The development database was re-inspected against PostgreSQL catalogs. It contains 13 public tables and 24 RLS policies. Direct authenticated INSERT/UPDATE privileges on offers and UPDATE on seller_applications/product_media were revoked where workflow writes must be mediated or no matching UPDATE policy exists. Frontend category persistence was corrected to use the existing categories table with tenant_id+slug conflict handling; the nonexistent save_marketplace_categories RPC call was removed. Product removal was changed to archival via status=archived because authenticated DELETE is not granted and preserving transaction history is safer.
 
 JavaScript module syntax/compilation passed after the frontend patch. This is not browser runtime validation. Authenticated multi-user tenant isolation, storage endpoint, image metadata persistence, cross-site auth, and complete order/cart E2E remain unverified. Do not promote the development schema or deploy production based on this checkpoint.
+
+
+## Authoritative continuation record — 11 November 2026
+
+This record supersedes older statements where they conflict.
+
+- Latest GitHub comparison at inspection: development branch 38 commits ahead of `main`, zero behind. PR #1 remains open/draft/unmerged. Build 01 baseline remains unchanged.
+- Neon `wlm-build02-dev` is ready; Neon Auth and Data API are provisioned and active. Primary Neon branch remains untouched.
+- Latest database evidence: 13 public RLS-enabled tables and 25 policies. The prior 24-policy figure is stale.
+- Rolled-back SQL tests with synthetic JWT claim contexts exercised tenant private-read/update denial, seller application approval and store creation, dual buyer/seller capabilities, category sync/deactivation, offer participant validation, order idempotency, stock decrement, and order status progression. This is database-level evidence only; it is not a real Auth/browser test.
+- Neon Function `wlmuploads` deployment #3 is recorded completed. The source uses runtime environment variables for Object Storage credentials and a caller JWT for database access. A real authenticated upload and metadata round trip remain unverified.
+- Marketplace category persistence uses the existing `save_marketplace_categories` security-definer RPC. It checks admin authorization, validates input, upserts, and deactivates removed categories transactionally. An earlier note claiming the RPC was missing was incorrect and is superseded.
+- Product archival is performed through status update in the current UI. This is a conservative archival UX choice; it is not evidence that database DELETE is unavailable. Database/PR evidence states product DELETE is protected by owner/admin RLS.
+- Cart supports multiple browser-local items and sequentially submits one negotiation offer per item. It is not server-synced, and consolidated multi-item checkout is not implemented; order creation remains per accepted offer.
+- Latest frontend module compile check: PASS. Static frontend scan found no embedded database connection string, private key, AWS secret assignment, or Neon API key assignment. Public Auth/Data API endpoints are expected browser configuration; upload credentials remain in Function environment variables.
+
+### Outstanding release gates
+Real Neon Auth browser sessions, two-user/two-tenant browser adversarial tests, live storage upload, complete browser seller/cart/negotiation/order flow, persistent settings and media verification, mobile/desktop/accessibility QA, production email/domain/cookie/monitoring review. No primary migration, PR merge, or production deployment until those gates pass and required authorization is obtained.
