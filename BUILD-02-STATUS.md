@@ -88,3 +88,41 @@ See `BUILD-02-IMPLEMENTATION.md` for architecture, configuration, verification e
 ### Klarifikasi pemeriksaan ulang RPC
 
 Pemeriksaan katalog PostgreSQL berikutnya menemukan bahwa `record_product_media` dan `save_marketplace_categories` terdaftar pada development branch. Temuan awal bahwa RPC kategori tidak ada tidak konsisten dengan pemeriksaan ulang; kemungkinan perubahan database berlangsung di antara pembacaan katalog. Frontend kini menggunakan upsert langsung untuk kategori, sehingga jalur simpan kategori tidak bergantung pada RPC tersebut. RPC `record_product_media` tetap dipakai oleh fungsi upload. Keberhasilan upload end-to-end dan konfigurasi credential storage masih belum dibuktikan.
+
+
+## Authoritative checkpoint — 11 November 2026 (latest repository + Neon inspection)
+
+This section supersedes older checkpoint statements above where they conflict.
+
+### Repository and deployment state
+- Build 02 branch is 38 commits ahead of `main`, zero commits behind at inspection. Build 01 baseline remains on `main`.
+- PR #1 is open, draft, and not merged. GitHub currently reports mergeable=false; do not merge while release gates remain.
+- Neon development branch `wlm-build02-dev` is ready and isolated. Primary branch remains unchanged.
+- Neon Auth is provisioned; email/password sign-up is enabled. Trusted origins include `https://klikra-digital.github.io` and `http://localhost:5173`. Email verification is currently not required in this development configuration.
+- Neon Data API is active and JWT-verified. Public schema is exposed with a 100-row API cap.
+- Neon Function `wlmuploads` deployment #3 is recorded as completed; source is in `functions/wlmuploads/index.mjs`. The endpoint health/config and a real authenticated file upload have not been exercised in this session.
+
+### Database evidence
+- 13 public tables, all RLS-enabled; 25 RLS policies (latest status/PR evidence; older 24-policy notes are stale).
+- Database-level workflow tests used synthetic JWT claim contexts and rolled-back fixture transactions. They verified tenant-private reads and updates denied across tenants, seller application approval/store creation, dual buyer+seller capabilities, category deactivation, negotiation party checks, order idempotency, legal status progression, and single stock decrement.
+- These are database-level authorization/workflow tests, not actual Neon Auth user sessions or browser E2E.
+- No schema or data promotion to the primary branch was performed.
+
+### Frontend corrections in latest commits
+- Marketplace category management now calls the existing security-definer `save_marketplace_categories` RPC. The function validates admin authorization, validates category payloads, upserts categories, and deactivates removed categories in one transaction. This supersedes the earlier mistaken note that the RPC did not exist.
+- Product archival remains implemented through a PATCH to `status=archived`; the database/PR currently documents owner/admin RLS-controlled product DELETE as granted, so archival is a conservative UI choice, not proof that DELETE is unavailable.
+- Browser cart stores multiple products locally and submits one offer per product sequentially. It is not a server-synced cart or consolidated multi-item checkout; each accepted offer currently creates its own order.
+- The prior frontend category upsert patch was superseded by commit `219ac1996644ac7e78b490aa36fc65bca0b0cccf`, restoring the transactional RPC.
+- JavaScript module syntax/compilation check passed after the restored RPC change. No real browser runtime was run.
+
+### Release gates still open
+1. Real account sign-up, sign-in, session refresh, logout and profile bootstrap from target browser origin.
+2. Real two-user/two-tenant browser adversarial tests.
+3. Real upload round trip against deployed Function and Object Storage, including metadata and URL validation.
+4. Persistent Studio settings load/save, logo/banner persistence and category workflow in browser.
+5. Seller/product, offer, order, stock-restoration and cart browser E2E.
+6. Mobile/desktop and accessibility QA.
+7. Production email verification, domain/cookie strategy, monitoring and storage access review.
+8. Explicit approval before primary DB migration, PR merge, or production deployment.
+
+**Release decision: NOT READY FOR CONTROLLED LAUNCH.** Keep PR #1 draft, development branch isolated, and payments disabled until release gates are evidenced.
